@@ -1,0 +1,183 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "User biometric profile, daily macro targets, training settings, and mesocycle state.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "Authenticated user UID." },
+        "name": { "type": "string", "description": "Display name." },
+        "sex": { "type": "string", "enum": ["m", "f"], "description": "Biological sex for BMR calculation." },
+        "age": { "type": "integer", "description": "User age in years." },
+        "weightKg": { "type": "number", "description": "Current body weight in kg." },
+        "heightCm": { "type": "number", "description": "Height in cm." },
+        "goal": { "type": "string", "enum": ["bulk", "cut", "maint"], "description": "Fitness goal." },
+        "actMultiplier": { "type": "number", "description": "Activity multiplier." },
+        "targetKcal": { "type": "integer", "description": "Base daily calorie target." },
+        "targetProtein": { "type": "integer", "description": "Daily protein target in grams." },
+        "targetCarbs": { "type": "integer", "description": "Daily carbohydrate target in grams." },
+        "targetFat": { "type": "integer", "description": "Daily fat target in grams." },
+        "splitId": { "type": "string", "enum": ["ul4", "ppl6", "fb3", "home3"], "description": "Active workout split ID." },
+        "equip": { "type": "string", "enum": ["all", "db", "bw"], "description": "Available equipment filter." },
+        "injury": { "type": "string", "enum": ["none", "shoulder", "back", "knee"], "description": "Active joint protection mode." },
+        "mesoWeek": { "type": "integer", "description": "Current week in 8-week mesocycle." },
+        "syncNutr": { "type": "boolean", "description": "Training-nutrition calorie sync enabled." },
+        "timeCrunch": { "type": "boolean", "description": "25-minute superset mode enabled." },
+        "deloadToday": { "type": "boolean", "description": "Smart auto-deload enabled for today." },
+        "lang": { "type": "string", "enum": ["ar", "en"], "description": "UI language preference." },
+        "darkTheme": { "type": "boolean", "description": "Dark mode preference." },
+        "waterCups": { "type": "integer", "description": "Today's water intake in cups." },
+        "waterDate": { "type": "string", "description": "ISO date for waterCups counter." },
+        "onboarded": { "type": "boolean", "description": "Whether initial profile setup is complete." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Server timestamp on creation." },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Server timestamp on update." }
+      },
+      "required": [
+        "userId", "name", "sex", "age", "weightKg", "heightCm", "goal", "actMultiplier",
+        "targetKcal", "targetProtein", "targetCarbs", "targetFat", "splitId", "equip",
+        "injury", "mesoWeek", "syncNutr", "timeCrunch", "deloadToday", "lang",
+        "darkTheme", "waterCups", "waterDate", "onboarded", "createdAt", "updatedAt"
+      ]
+    },
+    "WorkoutSession": {
+      "title": "WorkoutSession",
+      "description": "Completed workout session with total volume, RIR autoregulation, and trained muscle groups.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "dayName": { "type": "string" },
+        "splitId": { "type": "string" },
+        "dateISO": { "type": "string" },
+        "completedSets": { "type": "integer" },
+        "totalVolume": { "type": "number" },
+        "rir": { "type": "integer" },
+        "pump": { "type": "string", "enum": ["low", "good", "pain"] },
+        "durationSec": { "type": "integer" },
+        "muscles": { "type": "array", "description": "List of trained muscle keys." },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "userId", "dayName", "splitId", "dateISO", "completedSets",
+        "totalVolume", "rir", "pump", "durationSec", "muscles", "createdAt", "updatedAt"
+      ]
+    },
+    "MealLog": {
+      "title": "MealLog",
+      "description": "Logged daily meal entry with calories, macros, and entry source.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "name": { "type": "string" },
+        "dateISO": { "type": "string" },
+        "cal": { "type": "integer" },
+        "protein": { "type": "integer" },
+        "carbs": { "type": "integer" },
+        "fat": { "type": "integer" },
+        "source": { "type": "string", "enum": ["manual", "preset", "scanner", "budget", "auto"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "userId", "name", "dateISO", "cal", "protein", "carbs", "fat", "source", "createdAt", "updatedAt"
+      ]
+    },
+    "BodyLog": {
+      "title": "BodyLog",
+      "description": "Body weight and optional circumference measurements log.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "dateISO": { "type": "string" },
+        "weightKg": { "type": "number" },
+        "chestCm": { "type": "number" },
+        "waistCm": { "type": "number" },
+        "armCm": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "dateISO", "weightKg", "createdAt", "updatedAt"]
+    },
+    "ExerciseBest": {
+      "title": "ExerciseBest",
+      "description": "Personal record e1RM, overload status, and RP volume modifier per exercise.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "exerciseId": { "type": "string" },
+        "bestWeight": { "type": "number" },
+        "bestReps": { "type": "integer" },
+        "e1rm": { "type": "number" },
+        "suggestOverload": { "type": "boolean" },
+        "volumeMod": { "type": "integer" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "userId", "exerciseId", "bestWeight", "bestReps", "e1rm",
+        "suggestOverload", "volumeMod", "createdAt", "updatedAt"
+      ]
+    },
+    "CoachClient": {
+      "title": "CoachClient",
+      "description": "B2B Coach Portal client record with calorie target and assigned split.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "name": { "type": "string" },
+        "targetKcal": { "type": "integer" },
+        "splitId": { "type": "string", "enum": ["ul4", "ppl6", "fb3", "home3"] },
+        "notes": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "name", "targetKcal", "splitId", "createdAt", "updatedAt"]
+    },
+    "CustomExercise": {
+      "title": "CustomExercise",
+      "description": "User-created custom exercise added to a specific split day.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "splitId": { "type": "string" },
+        "dayIndex": { "type": "integer" },
+        "name": { "type": "string" },
+        "sets": { "type": "integer" },
+        "reps": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "splitId", "dayIndex", "name", "sets", "reps", "createdAt", "updatedAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/UserProfile" },
+      "description": "Authenticated user profile and performance settings."
+    },
+    "/users/{userId}/workouts/{workoutId}": {
+      "schema": { "$ref": "#/entities/WorkoutSession" },
+      "description": "Completed workout sessions for the user."
+    },
+    "/users/{userId}/meals/{mealId}": {
+      "schema": { "$ref": "#/entities/MealLog" },
+      "description": "Logged meals for the user."
+    },
+    "/users/{userId}/bodyLogs/{logId}": {
+      "schema": { "$ref": "#/entities/BodyLog" },
+      "description": "Weight and measurement history for the user."
+    },
+    "/users/{userId}/exerciseBests/{exerciseId}": {
+      "schema": { "$ref": "#/entities/ExerciseBest" },
+      "description": "Personal records and volume modifiers per exercise."
+    },
+    "/users/{userId}/coachClients/{clientId}": {
+      "schema": { "$ref": "#/entities/CoachClient" },
+      "description": "B2B coaching clients managed by the user."
+    },
+    "/users/{userId}/customExercises/{customId}": {
+      "schema": { "$ref": "#/entities/CustomExercise" },
+      "description": "Custom exercises added by the user."
+    }
+  }
+}
